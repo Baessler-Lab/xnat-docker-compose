@@ -1,4 +1,4 @@
-FROM tomcat:9-jdk8-openjdk-slim
+FROM pwoznicki/tomcat-psql:latest
 MAINTAINER Matt Kelsey <kelseym@wustl.edu>
 
 ARG XNAT_VERSION=${XNAT_VERSION}
@@ -30,10 +30,7 @@ ADD make-xnat-config.sh /usr/local/bin/make-xnat-config.sh
 ADD wait-for-postgres.sh /usr/local/bin/wait-for-postgres.sh
 ADD ${XNAT_PATH} /webapps
 
-RUN apt-get update && \
-    apt-get --yes install postgresql-client wget && \
-    apt-get --yes --auto-remove upgrade && \
-    rm -rf ${CATALINA_HOME}/webapps/* && \
+RUN rm -rf ${CATALINA_HOME}/webapps/* && \
     mkdir -p \
         ${CATALINA_HOME}/webapps/${XNAT_WEBAPP_FOLDER} \
         ${XNAT_HOME}/config \

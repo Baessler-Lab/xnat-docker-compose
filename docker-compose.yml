@@ -11,7 +11,7 @@ services:
       - --entrypoints.web.address=:80
       - --providers.docker=true
     ports:
-      - "80:80"
+      - "8001:80"
       - "8080:8080"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
@@ -27,6 +27,7 @@ services:
       - "traefik.http.routers.traefik_dash.rule=PathPrefix(`/dashboard`)"
       - "traefik.http.routers.traefik_dash.middlewares=service-redirect@docker,strip-routes@docker"
       - "traefik.http.services.traefik_dash.loadbalancer.server.port=8080"
+    restart: always
 
   xnat-web:
     container_name: xnat-web
@@ -75,6 +76,7 @@ services:
       CATALINA_OPTS: "-Xms${XNAT_MIN_HEAP} -Xmx${XNAT_MAX_HEAP} -Dxnat.home=${XNAT_HOME} -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=0.0.0.0:8000"
       PGPASSWORD: "${XNAT_DATASOURCE_PASSWORD}"
       XNAT_HOME: "${XNAT_HOME}"
+    restart: always
 
   xnat-db:
     container_name: xnat-db
@@ -88,6 +90,7 @@ services:
       - 5432
     volumes:
       - ./postgres-data:/var/lib/postgresql/data
+    restart: always
 
 networks:
   xnat-services:
